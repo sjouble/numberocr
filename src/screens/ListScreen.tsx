@@ -93,7 +93,6 @@ const ListScreen = () => {
         <Button title="포장단위 편집" onPress={() => setModalVisible(true)} />
       </View>
       <PackageEditor visible={modalVisible} onClose={() => setModalVisible(false)} />
-      </View>
     </View>
   );
 };
