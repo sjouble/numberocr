@@ -10,6 +10,7 @@ on:
 jobs:
   build-android:
     runs-on: ubuntu-latest
+    timeout-minutes: 30  # 빌드 타임아웃 설정
     
     steps:
     - name: Checkout code
@@ -66,4 +67,27 @@ jobs:
       with:
         name: NumberOCR-Release-APK
         path: android/app/build/outputs/apk/release/app-release-unsigned.apk
-        retention-days: 30 
+        retention-days: 30
+        
+    - name: Build Summary
+      run: |
+        echo "## 📱 NumberOCR 빌드 완료!" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### ✅ 빌드된 파일들:" >> $GITHUB_STEP_SUMMARY
+        echo "- **Debug APK**: NumberOCR-Debug-APK 아티팩트에서 다운로드" >> $GITHUB_STEP_SUMMARY
+        echo "- **Release APK**: NumberOCR-Release-APK 아티팩트에서 다운로드" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📋 설치 방법:" >> $GITHUB_STEP_SUMMARY
+        echo "1. 위의 아티팩트를 클릭하여 APK 다운로드" >> $GITHUB_STEP_SUMMARY
+        echo "2. Android 설정에서 '알 수 없는 소스' 활성화" >> $GITHUB_STEP_SUMMARY
+        echo "3. APK 파일을 탭하여 설치" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 🔧 권한 설정:" >> $GITHUB_STEP_SUMMARY
+        echo "- 카메라: 텍스트 인식 기능" >> $GITHUB_STEP_SUMMARY
+        echo "- 저장소: 데이터 저장 및 파일 공유" >> $GITHUB_STEP_SUMMARY
+        
+    - name: Success Notification
+      if: success()
+      run: |
+        echo "🎉 NumberOCR 빌드가 성공적으로 완료되었습니다!"
+        echo "📱 APK 파일을 아티팩트에서 다운로드하세요." 
