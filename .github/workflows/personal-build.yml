@@ -33,6 +33,8 @@ jobs:
       
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
+      with:
+        cmdline-tools-version: 'latest'
       
     - name: Create local.properties
       run: |
@@ -41,12 +43,22 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x android/gradlew
       
+    - name: Check environment
+      run: |
+        echo "Node version: $(node --version)"
+        echo "NPM version: $(npm --version)"
+        echo "Java version: $(java -version)"
+        echo "ANDROID_HOME: $ANDROID_HOME"
+        echo "ANDROID_SDK_ROOT: $ANDROID_SDK_ROOT"
+        ls -la android/
+      
     - name: Build Debug APK (개인 사용용)
       run: |
         cd android
-        ./gradlew assembleDebug
+        ./gradlew assembleDebug --stacktrace --info
       env:
         ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
+        GRADLE_OPTS: "-Dorg.gradle.daemon=false"
         
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4
@@ -58,9 +70,10 @@ jobs:
     - name: Build Release APK (서명 없음)
       run: |
         cd android
-        ./gradlew assembleRelease
+        ./gradlew assembleRelease --stacktrace --info
       env:
         ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
+        GRADLE_OPTS: "-Dorg.gradle.daemon=false"
         
     - name: Upload Release APK
       uses: actions/upload-artifact@v4
@@ -90,4 +103,14 @@ jobs:
       if: success()
       run: |
         echo "🎉 NumberOCR 빌드가 성공적으로 완료되었습니다!"
-        echo "📱 APK 파일을 아티팩트에서 다운로드하세요." 
+        echo "📱 APK 파일을 아티팩트에서 다운로드하세요."
+        
+    - name: Failure Notification
+      if: failure()
+      run: |
+        echo "❌ NumberOCR 빌드가 실패했습니다."
+        echo "🔍 빌드 로그를 확인하여 문제를 파악하세요."
+        echo "📋 일반적인 문제 해결 방법:"
+        echo "1. Android SDK 설정 확인"
+        echo "2. 의존성 버전 호환성 확인"
+        echo "3. gradle.properties 설정 확인" 
