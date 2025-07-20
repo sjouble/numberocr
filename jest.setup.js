@@ -25,6 +25,11 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   setItem: jest.fn(() => Promise.resolve()),
 }));
 
+jest.mock('@react-native-clipboard/clipboard', () => ({
+  setString: jest.fn(),
+  getString: jest.fn(() => Promise.resolve('')),
+}));
+
 // React Navigation 모킹
 jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({

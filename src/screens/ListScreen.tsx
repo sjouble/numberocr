@@ -5,6 +5,7 @@ import { RootStackParamList } from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Share from 'react-native-share';
 import RNFS from 'react-native-fs';
+import Clipboard from '@react-native-clipboard/clipboard';
 import PackageEditor from '../components/PackageEditor';
 
 type ListScreenRouteProp = RouteProp<RootStackParamList, 'List'>;
@@ -38,11 +39,13 @@ const ListScreen = () => {
   useEffect(() => {
     if (route.params?.newItem) {
       const newItem = route.params.newItem as ListItem;
-      const updatedItems = [...items, newItem];
-      setItems(updatedItems);
-      AsyncStorage.setItem('inventory_items', JSON.stringify(updatedItems));
+      setItems(prev => {
+        const updated = [...prev, newItem];
+        AsyncStorage.setItem('inventory_items', JSON.stringify(updated));
+        return updated;
+      });
     }
-  }, [route.params?.newItem, items]);
+  }, [route.params?.newItem]);
 
   const formatDataForShare = () => {
     return items.map(item => 
@@ -71,6 +74,12 @@ const ListScreen = () => {
     }
   };
 
+  const copyToClipboard = () => {
+    const content = formatDataForShare();
+    Clipboard.setString(content);
+    Alert.alert('복사 완료', '목록이 클립보드에 복사되었습니다.');
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -86,7 +95,7 @@ const ListScreen = () => {
         )}
       />
       <View style={styles.buttonContainer}>
-        <Button title="클립보드에 복사" onPress={() => { /* Clipboard API */ }} />
+        <Button title="클립보드에 복사" onPress={copyToClipboard} />
         <Button title="텍스트 파일로 저장" onPress={saveAsFile} />
         <Button title="공유하기" onPress={shareList} />
         <Button title="포장단위 편집" onPress={() => setModalVisible(true)} />

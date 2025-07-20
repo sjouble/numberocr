@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Image, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Image, Alert, PanResponder } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
@@ -18,8 +18,28 @@ const EditorScreen = () => {
   const [unit, setUnit] = useState('카톤');
   const [quantity, setQuantity] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
-  const [selection, _setSelection] = useState({ x: 0, y: 0, width: 0, height: 0 });
+  const [selection, setSelection] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const viewShot = useRef<ViewShot>(null);
+
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onMoveShouldSetPanResponder: () => true,
+    onPanResponderGrant: (evt) => {
+      const { locationX, locationY } = evt.nativeEvent;
+      setSelection({ x: locationX, y: locationY, width: 0, height: 0 });
+    },
+    onPanResponderMove: (evt) => {
+      const { locationX, locationY } = evt.nativeEvent;
+      setSelection(prev => ({
+        ...prev,
+        width: locationX - prev.x,
+        height: locationY - prev.y,
+      }));
+    },
+    onPanResponderRelease: () => {
+      // 선택 영역 완료
+    },
+  });
 
   const handleRecognize = async () => {
     if (selection.width > 10 && selection.height > 10 && viewShot.current && viewShot.current.capture) {
