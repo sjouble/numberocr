@@ -10,7 +10,7 @@ on:
 jobs:
   build-android:
     runs-on: ubuntu-latest
-    timeout-minutes: 30  # 빌드 타임아웃 설정
+    timeout-minutes: 30
     
     steps:
     - name: Checkout code
@@ -43,19 +43,10 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x android/gradlew
       
-    - name: Check environment
-      run: |
-        echo "Node version: $(node --version)"
-        echo "NPM version: $(npm --version)"
-        echo "Java version: $(java -version)"
-        echo "ANDROID_HOME: $ANDROID_HOME"
-        echo "ANDROID_SDK_ROOT: $ANDROID_SDK_ROOT"
-        ls -la android/
-      
-    - name: Build Debug APK (개인 사용용)
+    - name: Build Debug APK
       run: |
         cd android
-        ./gradlew assembleDebug --stacktrace --info
+        ./gradlew assembleDebug --stacktrace
       env:
         ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
         GRADLE_OPTS: "-Dorg.gradle.daemon=false"
@@ -67,10 +58,10 @@ jobs:
         path: android/app/build/outputs/apk/debug/app-debug.apk
         retention-days: 30
         
-    - name: Build Release APK (서명 없음)
+    - name: Build Release APK
       run: |
         cd android
-        ./gradlew assembleRelease --stacktrace --info
+        ./gradlew assembleRelease --stacktrace
       env:
         ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
         GRADLE_OPTS: "-Dorg.gradle.daemon=false"
@@ -93,24 +84,4 @@ jobs:
         echo "### 📋 설치 방법:" >> $GITHUB_STEP_SUMMARY
         echo "1. 위의 아티팩트를 클릭하여 APK 다운로드" >> $GITHUB_STEP_SUMMARY
         echo "2. Android 설정에서 '알 수 없는 소스' 활성화" >> $GITHUB_STEP_SUMMARY
-        echo "3. APK 파일을 탭하여 설치" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### 🔧 권한 설정:" >> $GITHUB_STEP_SUMMARY
-        echo "- 카메라: 텍스트 인식 기능" >> $GITHUB_STEP_SUMMARY
-        echo "- 저장소: 데이터 저장 및 파일 공유" >> $GITHUB_STEP_SUMMARY
-        
-    - name: Success Notification
-      if: success()
-      run: |
-        echo "🎉 NumberOCR 빌드가 성공적으로 완료되었습니다!"
-        echo "📱 APK 파일을 아티팩트에서 다운로드하세요."
-        
-    - name: Failure Notification
-      if: failure()
-      run: |
-        echo "❌ NumberOCR 빌드가 실패했습니다."
-        echo "🔍 빌드 로그를 확인하여 문제를 파악하세요."
-        echo "📋 일반적인 문제 해결 방법:"
-        echo "1. Android SDK 설정 확인"
-        echo "2. 의존성 버전 호환성 확인"
-        echo "3. gradle.properties 설정 확인" 
+        echo "3. APK 파일을 탭하여 설치" >> $GITHUB_STEP_SUMMARY 

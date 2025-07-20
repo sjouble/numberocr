@@ -2,45 +2,32 @@ name: Deploy
 
 on:
   release:
-    types: [ published ]
+    types: [published]
 
 jobs:
-  deploy-android:
+  deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     
     steps:
-    - name: Download Android APK
-      uses: actions/download-artifact@v4
-      with:
-        name: app-release
-        
-    - name: Download Android AAB
-      uses: actions/download-artifact@v4
-      with:
-        name: app-release-bundle
-        
-    - name: Create Release Assets
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Deploy Notification
       run: |
-        mkdir -p release-assets
-        mv *.apk release-assets/
-        mv *.aab release-assets/
+        echo "🚀 NumberOCR v${{ github.event.release.tag_name }} 배포 완료!"
+        echo "📱 APK 파일: ${{ github.event.release.assets[0].browser_download_url }}"
+        echo "📋 릴리즈 노트: ${{ github.event.release.body }}"
         
-    - name: Upload to Release
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./release-assets/*.apk
-        asset_name: NumberOCR-${{ github.event.release.tag_name }}.apk
-        asset_content_type: application/vnd.android.package-archive
-        
-    - name: Upload AAB to Release
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./release-assets/*.aab
-        asset_name: NumberOCR-${{ github.event.release.tag_name }}.aab
-        asset_content_type: application/octet-stream 
+    - name: Success Summary
+      run: |
+        echo "## 🎉 배포 완료!" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📱 NumberOCR v${{ github.event.release.tag_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **릴리즈**: ${{ github.event.release.html_url }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **APK 다운로드**: ${{ github.event.release.assets[0].browser_download_url }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📋 설치 방법:" >> $GITHUB_STEP_SUMMARY
+        echo "1. APK 파일 다운로드" >> $GITHUB_STEP_SUMMARY
+        echo "2. Android 설정에서 '알 수 없는 소스' 활성화" >> $GITHUB_STEP_SUMMARY
+        echo "3. APK 파일 설치" >> $GITHUB_STEP_SUMMARY 

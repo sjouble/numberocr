@@ -15,6 +15,7 @@ on:
 jobs:
   create-release:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     
     steps:
     - name: Checkout code
@@ -37,6 +38,8 @@ jobs:
       
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
+      with:
+        cmdline-tools-version: 'latest'
       
     - name: Create local.properties
       run: |
@@ -48,11 +51,13 @@ jobs:
     - name: Build APK
       run: |
         cd android
-        ./gradlew assembleRelease
+        ./gradlew assembleRelease --stacktrace
       env:
         ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
+        GRADLE_OPTS: "-Dorg.gradle.daemon=false"
         
     - name: Create Release
+      id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

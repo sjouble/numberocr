@@ -20,6 +20,17 @@ NumberOCR는 React Native로 개발된 OCR(광학 문자 인식) 앱입니다. �
 - **React Navigation**: 7.1.14
 - **Async Storage**: 2.2.0
 
+## 🚀 빠른 시작
+
+### GitHub Actions를 통한 APK 빌드
+
+1. **[Personal Build 워크플로우](https://github.com/sjouble/numberocr/actions/workflows/personal-build.yml) 클릭**
+2. **"Run workflow" 버튼 클릭**
+3. **빌드 완료 후 APK 다운로드**
+4. **Android 기기에 설치**
+
+> 💡 **참고**: Personal Build는 서명되지 않은 APK를 생성하므로 "알 수 없는 소스" 설정을 활성화해야 합니다.
+
 ## 📱 설치 및 실행
 
 ### 사전 요구사항
@@ -70,6 +81,22 @@ src/
 ├── screens/        # 화면 컴포넌트
 └── ...
 ```
+
+## 🚀 CI/CD
+
+이 프로젝트는 GitHub Actions를 사용하여 자동 빌드 및 배포를 지원합니다.
+
+### 워크플로우
+
+- **Personal Build**: 개인 사용을 위한 APK 빌드 (수동 실행 가능)
+- **Auto Release**: 자동 릴리즈 생성 및 APK 업로드
+- **Deploy**: 릴리즈 시 자동 배포 알림
+
+### 사용 방법
+
+1. **개인 빌드**: Personal Build 워크플로우를 수동으로 실행하여 APK 생성
+2. **릴리즈**: Auto Release 워크플로우를 실행하여 GitHub 릴리즈 생성
+3. **배포**: 릴리즈 발행 시 자동으로 배포 알림
 
 ## 📄 라이선스
 
