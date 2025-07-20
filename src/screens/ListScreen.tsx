@@ -5,7 +5,7 @@ import { RootStackParamList } from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Share from 'react-native-share';
 import RNFS from 'react-native-fs';
-import PackageEditor from '../../components/PackageEditor';
+import PackageEditor from '../components/PackageEditor';
 
 type ListScreenRouteProp = RouteProp<RootStackParamList, 'List'>;
 
