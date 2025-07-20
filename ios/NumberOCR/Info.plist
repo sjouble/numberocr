@@ -4,6 +4,12 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>NSCameraUsageDescription</key>
+	<string>품번 인식을 위해 카메라를 사용합니다.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>품번 인식을 위해 사진 라이브러리에 접근합니다.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>비디오 촬영 시 오디오 녹음을 위해 마이크를 사용합니다.</string>
 	<key>CFBundleDisplayName</key>
 	<string>NumberOCR</string>
 	<key>CFBundleExecutable</key>
