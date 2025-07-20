@@ -1,0 +1,46 @@
+name: Deploy
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  deploy-android:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Download Android APK
+      uses: actions/download-artifact@v4
+      with:
+        name: app-release
+        
+    - name: Download Android AAB
+      uses: actions/download-artifact@v4
+      with:
+        name: app-release-bundle
+        
+    - name: Create Release Assets
+      run: |
+        mkdir -p release-assets
+        mv *.apk release-assets/
+        mv *.aab release-assets/
+        
+    - name: Upload to Release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./release-assets/*.apk
+        asset_name: NumberOCR-${{ github.event.release.tag_name }}.apk
+        asset_content_type: application/vnd.android.package-archive
+        
+    - name: Upload AAB to Release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./release-assets/*.aab
+        asset_name: NumberOCR-${{ github.event.release.tag_name }}.aab
+        asset_content_type: application/octet-stream 
