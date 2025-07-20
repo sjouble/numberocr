@@ -1,24 +1,0 @@
-    - name: Build Summary
-      run: |
-        echo "## 📱 NumberOCR 빌드 완료!" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### ✅ 빌드된 파일들:" >> $GITHUB_STEP_SUMMARY
-        echo "- **Debug APK**: NumberOCR-Debug-APK 아티팩트에서 다운로드" >> $GITHUB_STEP_SUMMARY
-        echo "- **Release APK**: NumberOCR-Release-APK 아티팩트에서 다운로드" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### 📋 설치 방법:" >> $GITHUB_STEP_SUMMARY
-        echo "1. 위의 아티팩트를 클릭하여 APK 다운로드" >> $GITHUB_STEP_SUMMARY
-        echo "2. Android 설정에서 '알 수 없는 소스' 활성화" >> $GITHUB_STEP_SUMMARY
-        echo "3. APK 파일을 탭하여 설치" >> $GITHUB_STEP_SUMMARY
-        
-    - name: Success Notification
-      if: success()
-      run: |
-        echo "🎉 NumberOCR 빌드가 성공적으로 완료되었습니다!"
-        echo "📱 APK 파일을 아티팩트에서 다운로드하세요."
-        
-    - name: Failure Notification
-      if: failure()
-      run: |
-        echo "❌ NumberOCR 빌드가 실패했습니다."
-        echo "🔍 빌드 로그를 확인하여 문제를 파악하세요."

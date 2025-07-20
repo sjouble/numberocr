@@ -1,0 +1,99 @@
+name: Personal Build
+
+on:
+  workflow_dispatch:  # 수동 실행
+  push:
+    branches: [ main ]
+  release:
+    types: [ published ]
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        cmdline-tools-version: 'latest'
+      
+    - name: Create local.properties
+      run: |
+        echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x android/gradlew
+      
+    - name: Build Debug APK
+      run: |
+        cd android
+        ./gradlew assembleDebug --stacktrace
+      env:
+        ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
+        GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+        
+    - name: Upload Debug APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: NumberOCR-Debug-APK
+        path: android/app/build/outputs/apk/debug/app-debug.apk
+        retention-days: 30
+        
+    - name: Build Release APK
+      run: |
+        cd android
+        ./gradlew assembleRelease --stacktrace
+      env:
+        ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
+        GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+        
+    - name: Upload Release APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: NumberOCR-Release-APK
+        path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+        retention-days: 30
+        
+    - name: Build Summary
+      run: |
+        echo "## 📱 NumberOCR 빌드 완료!" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### ✅ 빌드된 파일들:" >> $GITHUB_STEP_SUMMARY
+        echo "- **Debug APK**: NumberOCR-Debug-APK 아티팩트에서 다운로드" >> $GITHUB_STEP_SUMMARY
+        echo "- **Release APK**: NumberOCR-Release-APK 아티팩트에서 다운로드" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📋 설치 방법:" >> $GITHUB_STEP_SUMMARY
+        echo "1. 위의 아티팩트를 클릭하여 APK 다운로드" >> $GITHUB_STEP_SUMMARY
+        echo "2. Android 설정에서 '알 수 없는 소스' 활성화" >> $GITHUB_STEP_SUMMARY
+        echo "3. APK 파일을 탭하여 설치" >> $GITHUB_STEP_SUMMARY
+        
+    - name: Success Notification
+      if: success()
+      run: |
+        echo "🎉 NumberOCR 빌드가 성공적으로 완료되었습니다!"
+        echo "📱 APK 파일을 아티팩트에서 다운로드하세요."
+        
+    - name: Failure Notification
+      if: failure()
+      run: |
+        echo "❌ NumberOCR 빌드가 실패했습니다."
+        echo "🔍 빌드 로그를 확인하여 문제를 파악하세요." 

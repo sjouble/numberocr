@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, FlatList, StyleSheet, Alert } from 'react-native';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Share from 'react-native-share';
@@ -17,7 +17,6 @@ interface ListItem {
 }
 
 const ListScreen = () => {
-  const navigation = useNavigation();
   const route = useRoute<ListScreenRouteProp>();
   const [items, setItems] = useState<ListItem[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -43,7 +42,7 @@ const ListScreen = () => {
       setItems(updatedItems);
       AsyncStorage.setItem('inventory_items', JSON.stringify(updatedItems));
     }
-  }, [route.params?.newItem]);
+  }, [route.params?.newItem, items]);
 
   const formatDataForShare = () => {
     return items.map(item => 

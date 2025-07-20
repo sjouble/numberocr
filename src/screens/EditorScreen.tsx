@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Image, PanResponder, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Image, Alert } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
@@ -18,7 +18,7 @@ const EditorScreen = () => {
   const [unit, setUnit] = useState('카톤');
   const [quantity, setQuantity] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
-  const [selection, setSelection] = useState({ x: 0, y: 0, width: 0, height: 0 });
+  const [selection, _setSelection] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const viewShot = useRef<ViewShot>(null);
 
   const handleRecognize = async () => {
