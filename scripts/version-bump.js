@@ -47,7 +47,7 @@ buildGradleContent = buildGradleContent.replace(
 const today = new Date();
 const versionCode = parseInt(today.getFullYear().toString().slice(-2) + 
                            String(today.getMonth() + 1).padStart(2, '0') + 
-                           String(today.getDate()).padStart(2, '0'));
+                           String(today.getDate()).padStart(2, '0'), 10);
 
 buildGradleContent = buildGradleContent.replace(
   /versionCode\s+\d+/,
