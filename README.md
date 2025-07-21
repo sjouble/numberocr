@@ -36,9 +36,13 @@ NumberOCR는 React Native로 개발된 OCR(광학 문자 인식) 앱입니다. �
 ### 사전 요구사항
 
 - Node.js 18 이상
-- React Native 개발 환경 설정
+- Java Development Kit (JDK) 17
 - Android Studio (Android 개발용)
 - Xcode (iOS 개발용, macOS만 해당)
+
+### Android 환경 설정
+
+Android 개발 환경 설정이 필요한 경우 [ANDROID_SETUP.md](./ANDROID_SETUP.md)를 참조하세요.
 
 ### 로컬 실행
 
