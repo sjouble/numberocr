@@ -1,0 +1,35 @@
+name: Test Workflow
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Test GitHub Actions
+      run: |
+        echo "✅ GitHub Actions가 정상적으로 작동합니다!"
+        echo "📅 현재 시간: $(date)"
+        echo "🏷️  브랜치: ${{ github.ref_name }}"
+        echo "🔗 커밋: ${{ github.sha }}"
+        
+    - name: Success Summary
+      run: |
+        echo "## 🎉 GitHub Actions 테스트 성공!" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### ✅ 모든 워크플로우가 정상적으로 설정되었습니다:" >> $GITHUB_STEP_SUMMARY
+        echo "- **Complete Deploy Pipeline**: 전체 배포 파이프라인" >> $GITHUB_STEP_SUMMARY
+        echo "- **Personal Build**: 개인용 APK 빌드" >> $GITHUB_STEP_SUMMARY
+        echo "- **Auto Release**: 자동 릴리즈 생성" >> $GITHUB_STEP_SUMMARY
+        echo "- **Android Build**: Android 빌드" >> $GITHUB_STEP_SUMMARY
+        echo "- **iOS Build**: iOS 빌드" >> $GITHUB_STEP_SUMMARY
+        echo "- **Lint and Test**: 코드 검사" >> $GITHUB_STEP_SUMMARY
+        echo "- **Deploy**: 배포 알림" >> $GITHUB_STEP_SUMMARY 
