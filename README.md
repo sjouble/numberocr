@@ -88,15 +88,44 @@ src/
 
 ### 워크플로우
 
+- **Complete Deploy Pipeline**: 전체 배포 파이프라인 (테스트 → 빌드 → 릴리즈)
 - **Personal Build**: 개인 사용을 위한 APK 빌드 (수동 실행 가능)
 - **Auto Release**: 자동 릴리즈 생성 및 APK 업로드
 - **Deploy**: 릴리즈 시 자동 배포 알림
 
-### 사용 방법
+### 배포 방법
 
-1. **개인 빌드**: Personal Build 워크플로우를 수동으로 실행하여 APK 생성
-2. **릴리즈**: Auto Release 워크플로우를 실행하여 GitHub 릴리즈 생성
-3. **배포**: 릴리즈 발행 시 자동으로 배포 알림
+#### 1. 자동 배포 (권장)
+```bash
+# 버전 업데이트 및 배포
+npm run deploy:release
+```
+
+#### 2. 수동 배포
+```bash
+# 버전 업데이트
+npm run version:patch  # 또는 minor, major
+
+# 태그 생성 및 배포
+git add .
+git commit -m "Bump version"
+git tag v$(node -p "require('./package.json').version")
+git push origin main --tags
+```
+
+#### 3. GitHub Actions 수동 실행
+1. GitHub 저장소 → Actions 탭
+2. "Complete Deploy Pipeline" 선택
+3. "Run workflow" 클릭
+4. 버전과 릴리즈 노트 입력
+
+### 배포 결과물
+
+- **APK 파일**: 직접 설치용
+- **AAB 파일**: Google Play Store 업로드용
+- **GitHub 릴리즈**: 자동 생성된 릴리즈 페이지
+
+자세한 배포 가이드는 [DEPLOYMENT.md](./DEPLOYMENT.md)를 참조하세요.
 
 ## 📄 라이선스
 

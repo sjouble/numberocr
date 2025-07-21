@@ -7,7 +7,12 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "version:patch": "node scripts/version-bump.js patch",
+    "version:minor": "node scripts/version-bump.js minor",
+    "version:major": "node scripts/version-bump.js major",
+    "deploy:prepare": "npm run version:patch && git add . && git commit -m \"Bump version\" && git push origin main",
+    "deploy:release": "npm run deploy:prepare && git tag v$(node -p \"require('./package.json').version\") && git push origin main --tags"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",
