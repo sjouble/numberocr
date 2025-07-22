@@ -29,7 +29,8 @@
     "react-native-text-recognition": "^1.0.2",
     "react-native-view-shot": "^4.0.3",
     "react-native-vision-camera": "^4.7.1",
-    "react-native-worklets-core": "^1.6.0"
+    "react-native-worklets-core": "^1.6.0",
+    "yocto-queue": "^1.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
